@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>RCipher WebApp</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<main class="card">
+		<header>
+			<h1>RCipher</h1>
+			<p class="subtitle">Encrypt and decrypt text, the same way the CLI does.</p>
+		</header>
+
+		<div class="tabs" role="tablist">
+			<button class="tab active" id="tab-encrypt" role="tab" aria-selected="true">Encrypt</button>
+			<button class="tab" id="tab-decrypt" role="tab" aria-selected="false">Decrypt</button>
+		</div>
+
+		<section id="encrypt-panel" class="panel">
+			<label for="plaintext">Plain text</label>
+			<textarea id="plaintext" placeholder="Enter TXT(max chars 256)..." maxlength="256"></textarea>
+			<div class="row">
+				<span id="plain-count" class="counter">0 / 256</span>
+				<button id="encrypt-btn" class="primary">Encrypt</button>
+			</div>
+			<label for="cipher-output">Cipher</label>
+			<textarea id="cipher-output" readonly placeholder="Cipher output appears here..."></textarea>
+			<div class="row">
+				<button id="copy-cipher" class="ghost">Copy cipher</button>
+				<button id="use-cipher" class="ghost">Use in Decrypt</button>
+			</div>
+		</section>
+
+		<section id="decrypt-panel" class="panel hidden">
+			<label for="cipher-input">Cipher</label>
+			<textarea id="cipher-input" placeholder="Paste cipher, e.g. 70.72.75...."></textarea>
+			<div class="row">
+				<span></span>
+				<button id="decrypt-btn" class="primary">Decrypt</button>
+			</div>
+			<label for="plain-output">Plain text</label>
+			<textarea id="plain-output" readonly placeholder="Decrypted text appears here..."></textarea>
+			<div class="row">
+				<button id="copy-plain" class="ghost">Copy text</button>
+			</div>
+		</section>
+
+		<p id="status" class="status" role="status"></p>
+	</main>
+
+	<script src="app.js"></script>
+</body>
+</html>
