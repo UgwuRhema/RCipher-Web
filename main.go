@@ -4,15 +4,15 @@ import (
 	"embed"
 	"encoding/json"
 	"fmt"
-	"io/fs"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 )
 
-//go:embed static/*
-var staticFiles embed.FS
+//go:embed index.html manifest.json sw.js static
+var files embed.FS
 
 type cipherRequest struct {
 	Text   string `json:"text"`
@@ -89,18 +89,25 @@ func handleDecrypt(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	sub, err := fs.Sub(staticFiles, "static")
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	mux := http.NewServeMux()
-	mux.Handle("/", http.FileServer(http.FS(sub)))
+	mux.Handle("/", http.FileServer(http.FS(files)))
 	mux.HandleFunc("/api/encrypt", handleEncrypt)
 	mux.HandleFunc("/api/decrypt", handleDecrypt)
 
 	addr := ":8080"
+	certFile := os.Getenv("RCIPHER_CERT")
+	keyFile := os.Getenv("RCIPHER_KEY")
+
+	if certFile != "" && keyFile != "" {
+		log.Printf("RCipher WebApp running at https://localhost%s", addr)
+		if err := http.ListenAndServeTLS(addr, certFile, keyFile, mux); err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
+
 	log.Printf("RCipher WebApp running at http://localhost%s", addr)
+	log.Printf("PWA install and offline mode require HTTPS or localhost; set RCIPHER_CERT and RCIPHER_KEY to serve TLS")
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		log.Fatal(err)
 	}

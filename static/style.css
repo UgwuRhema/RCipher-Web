@@ -189,3 +189,38 @@ button:disabled {
 .status.error {
 	color: var(--error);
 }
+
+.install {
+	margin-bottom: 16px;
+	color: var(--accent-hover);
+	border-color: var(--accent);
+}
+
+@media (max-width: 520px) {
+	body {
+		padding: 12px;
+		padding-top: max(12px, env(safe-area-inset-top));
+		padding-bottom: max(12px, env(safe-area-inset-bottom));
+	}
+
+	.card {
+		padding: 20px;
+		border-radius: 14px;
+	}
+
+	header h1 {
+		font-size: 1.6rem;
+	}
+
+	.subtitle {
+		margin-bottom: 16px;
+	}
+
+	textarea {
+		min-height: 96px;
+	}
+
+	.row {
+		flex-wrap: wrap;
+	}
+}

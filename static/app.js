@@ -123,3 +123,37 @@ useCipher.addEventListener("click", () => {
 
 tabEncrypt.addEventListener("click", () => switchTab("encrypt"));
 tabDecrypt.addEventListener("click", () => switchTab("decrypt"));
+
+const installBtn = document.getElementById("install-btn");
+let deferredPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (event) => {
+	event.preventDefault();
+	deferredPrompt = event;
+	installBtn.hidden = false;
+});
+
+installBtn.addEventListener("click", async () => {
+	if (!deferredPrompt) {
+		setStatus("Use your browser menu to install this app.", "error");
+		return;
+	}
+	deferredPrompt.prompt();
+	await deferredPrompt.userChoice;
+	deferredPrompt = null;
+	installBtn.hidden = true;
+});
+
+window.addEventListener("appinstalled", () => {
+	deferredPrompt = null;
+	installBtn.hidden = true;
+	setStatus("RCipher installed. You can launch it from your home screen.", "success");
+});
+
+if ("serviceWorker" in navigator && window.isSecureContext) {
+	window.addEventListener("load", () => {
+		navigator.serviceWorker.register("sw.js").catch(() => {
+			setStatus("Offline mode unavailable in this browser.", "error");
+		});
+	});
+}
